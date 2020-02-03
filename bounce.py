@@ -53,7 +53,7 @@ from sugar3.presence import presenceservice
 log = logging.getLogger('bounce')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
-Gtk.add_log_handlers()
+# Gtk.add_log_handlers()
 
 # This section can be modified to change the default stages that are built into the activity.
 DEFAULT_STAGE_DESCS = [
