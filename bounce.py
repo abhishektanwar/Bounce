@@ -28,26 +28,32 @@ except (ImportError, AttributeError):
 from pongc import *
 
 # Import GTK.
-import gobject, pygtk, gtk, pango, cairo
-gobject.threads_init()  
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+import pygtk
+from gi.repository import Pango
+from gi.repository import GObject
+import cairo
+GObject.threads_init()  
 
 # Import the PyGame mixer for sound output.
 import pygame.mixer
 pygame.mixer.init()
 
 # Import Sugar modules.
-from sugar.activity import activity
-from sugar.graphics import *
-from sugar.graphics import alert
-from sugar.graphics import toggletoolbutton
-from sugar.graphics import icon
-from sugar.presence import presenceservice
+from sugar3.activity import activity
+from sugar3.graphics import *
+from sugar3.graphics import alert
+from sugar3.graphics import toggletoolbutton
+from sugar3.graphics import icon
+from sugar3.presence import presenceservice
 
 # Initialize logging.
 log = logging.getLogger('bounce')
 log.setLevel(logging.DEBUG)
 logging.basicConfig()
-gtk.add_log_handlers()
+Gtk.add_log_handlers()
 
 # This section can be modified to change the default stages that are built into the activity.
 DEFAULT_STAGE_DESCS = [
@@ -1007,7 +1013,7 @@ class Game:
 game = Game()
 
 # Panel that appears above the game, allowing the currently active stage to be edited.
-class EditorPanel(gtk.EventBox):
+class EditorPanel(Gtk.EventBox):
 
     STEP_STAGENAME    = 0
     STEP_STAGEDEPTH   = 1
@@ -1018,86 +1024,86 @@ class EditorPanel(gtk.EventBox):
     STEP_MAX          = 6
 
     def __init__ (self, activity):
-        gtk.EventBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.activity = activity
 
-        self.hbox = gtk.HBox()
+        self.hbox = Gtk.HBox()
         self.add(self.hbox)
 
         self.hbox.set_border_width(10)
         self.hbox.set_spacing(10)
 
-        self.prevbtn = gtk.Button()
+        self.prevbtn = Gtk.Button()
         self.prevbtn.add(icon.Icon(icon_name='go-left'))
         self.prevbtn.connect('clicked', self.on_prev)
 
-        self.nextbtn = gtk.Button()
+        self.nextbtn = Gtk.Button()
         self.nextbtn.add(icon.Icon(icon_name='go-right'))
         self.nextbtn.connect('clicked', self.on_next)
 
         self.hbox.pack_end(self.nextbtn, False, False)
         self.hbox.pack_end(self.prevbtn, False, False)
 
-        self.propbox = gtk.HBox()
+        self.propbox = Gtk.HBox()
         self.propbox.set_spacing(20)
 
-        self.hbox.pack_start(self.propbox)
+        self.hbox.pack_start(self.propbox, True, True, 0)
 
-        self.separator = gtk.VSeparator()
+        self.separator = Gtk.VSeparator()
 
-        self.stage_label = gtk.Label()
+        self.stage_label = Gtk.Label()
         self.stage_label.set_markup('<big>'+_('Stage')+'</big>')
 
-        self.stagename_label = gtk.Label(_('Name'))
-        self.stagename_entry = gtk.Entry()
+        self.stagename_label = Gtk.Label(label=_('Name'))
+        self.stagename_entry = Gtk.Entry()
         self.stagename_entry.connect('changed', self.on_entry_changed)
 
-        self.stagedepth_label = gtk.Label(_('Depth'))
-        self.stagedepth_adjust = gtk.Adjustment(100, 10, 1000, 1)
+        self.stagedepth_label = Gtk.Label(label=_('Depth'))
+        self.stagedepth_adjust = Gtk.Adjustment(100, 10, 1000, 1)
         self.stagedepth_adjust.connect('value-changed', self.on_value_changed)
-        self.stagedepth_scale = gtk.HScale(self.stagedepth_adjust)
+        self.stagedepth_scale = Gtk.HScale(self.stagedepth_adjust)
 
-        self.stagegravity_x_label = gtk.Label(_('X Gravity'))
-        self.stagegravity_x_adjust = gtk.Adjustment(0, -3, 3, 1)
+        self.stagegravity_x_label = Gtk.Label(label=_('X Gravity'))
+        self.stagegravity_x_adjust = Gtk.Adjustment(0, -3, 3, 1)
         self.stagegravity_x_adjust.connect('value-changed', self.on_value_changed)
-        self.stagegravity_x_scale = gtk.HScale(self.stagegravity_x_adjust)
-        self.stagegravity_y_label = gtk.Label(_('Y Gravity'))
-        self.stagegravity_y_adjust = gtk.Adjustment(1, -3, 3, 1)
+        self.stagegravity_x_scale = Gtk.HScale(self.stagegravity_x_adjust)
+        self.stagegravity_y_label = Gtk.Label(label=_('Y Gravity'))
+        self.stagegravity_y_adjust = Gtk.Adjustment(1, -3, 3, 1)
         self.stagegravity_y_adjust.connect('value-changed', self.on_value_changed)
-        self.stagegravity_y_scale = gtk.HScale(self.stagegravity_y_adjust)
+        self.stagegravity_y_scale = Gtk.HScale(self.stagegravity_y_adjust)
 
-        self.ball_label = gtk.Label()
+        self.ball_label = Gtk.Label()
         self.ball_label.set_markup('<big>'+_('Ball')+'</big>')
 
-        self.ballsize_label = gtk.Label(_('Size'))
-        self.ballsize_adjust = gtk.Adjustment(1, 1, 5, 1)
+        self.ballsize_label = Gtk.Label(label=_('Size'))
+        self.ballsize_adjust = Gtk.Adjustment(1, 1, 5, 1)
         self.ballsize_adjust.connect('value-changed', self.on_value_changed)
-        self.ballsize_scale = gtk.HScale(self.ballsize_adjust)
-        self.ballspeed_label = gtk.Label(_('Speed'))
-        self.ballspeed_adjust = gtk.Adjustment(10, 1, 20, 1)
+        self.ballsize_scale = Gtk.HScale(self.ballsize_adjust)
+        self.ballspeed_label = Gtk.Label(label=_('Speed'))
+        self.ballspeed_adjust = Gtk.Adjustment(10, 1, 20, 1)
         self.ballspeed_adjust.connect('value-changed', self.on_value_changed)
-        self.ballspeed_scale = gtk.HScale(self.ballspeed_adjust)
+        self.ballspeed_scale = Gtk.HScale(self.ballspeed_adjust)
 
-        self.paddle_label = gtk.Label()
+        self.paddle_label = Gtk.Label()
         self.paddle_label.set_markup('<big>'+_('Paddle')+'</big>')
 
-        self.paddlesize_x_label = gtk.Label(_('X Size'))
-        self.paddlesize_x_adjust = gtk.Adjustment(20, 1, 50, 1)
+        self.paddlesize_x_label = Gtk.Label(label=_('X Size'))
+        self.paddlesize_x_adjust = Gtk.Adjustment(20, 1, 50, 1)
         self.paddlesize_x_adjust.connect('value-changed', self.on_value_changed)
-        self.paddlesize_x_scale = gtk.HScale(self.paddlesize_x_adjust)
-        self.paddlesize_y_label = gtk.Label(_('Y Size'))
-        self.paddlesize_y_adjust = gtk.Adjustment(20, 1, 50, 1)
+        self.paddlesize_x_scale = Gtk.HScale(self.paddlesize_x_adjust)
+        self.paddlesize_y_label = Gtk.Label(label=_('Y Size'))
+        self.paddlesize_y_adjust = Gtk.Adjustment(20, 1, 50, 1)
         self.paddlesize_y_adjust.connect('value-changed', self.on_value_changed)
-        self.paddlesize_y_scale = gtk.HScale(self.paddlesize_y_adjust)
+        self.paddlesize_y_scale = Gtk.HScale(self.paddlesize_y_adjust)
 
-        self.ai_label = gtk.Label()
+        self.ai_label = Gtk.Label()
         self.ai_label.set_markup('<big>'+_('AI')+'</big>')
 
-        self.aispeed_label = gtk.Label(_('Speed'))
-        self.aispeed_adjust = gtk.Adjustment(1, 1, 10, 1)
+        self.aispeed_label = Gtk.Label(label=_('Speed'))
+        self.aispeed_adjust = Gtk.Adjustment(1, 1, 10, 1)
         self.aispeed_adjust.connect('value-changed', self.on_value_changed)
-        self.aispeed_scale = gtk.HScale(self.aispeed_adjust)
+        self.aispeed_scale = Gtk.HScale(self.aispeed_adjust)
 
         self.show_all()
 
@@ -1165,92 +1171,92 @@ class EditorPanel(gtk.EventBox):
             self.propbox.pack_start(self.stage_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.stagename_label, False, False)
-            self.propbox.pack_start(self.stagename_entry)
+            self.propbox.pack_start(self.stagename_entry, True, True, 0)
 
         if self.step == EditorPanel.STEP_STAGEDEPTH:
             self.propbox.pack_start(self.stage_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.stagedepth_label, False, False)
-            self.propbox.pack_start(self.stagedepth_scale)
+            self.propbox.pack_start(self.stagedepth_scale, True, True, 0)
 
         if self.step == EditorPanel.STEP_STAGEGRAVITY:
             self.propbox.pack_start(self.stage_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.stagegravity_x_label, False, False)
-            self.propbox.pack_start(self.stagegravity_x_scale)
+            self.propbox.pack_start(self.stagegravity_x_scale, True, True, 0)
             self.propbox.pack_start(self.stagegravity_y_label, False, False)
-            self.propbox.pack_start(self.stagegravity_y_scale)
+            self.propbox.pack_start(self.stagegravity_y_scale, True, True, 0)
 
         if self.step == EditorPanel.STEP_BALL:
             self.propbox.pack_start(self.ball_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.ballsize_label, False, False)
-            self.propbox.pack_start(self.ballsize_scale)
+            self.propbox.pack_start(self.ballsize_scale, True, True, 0)
             self.propbox.pack_start(self.ballspeed_label, False, False)
-            self.propbox.pack_start(self.ballspeed_scale)
+            self.propbox.pack_start(self.ballspeed_scale, True, True, 0)
 
         if self.step == EditorPanel.STEP_PADDLE:
             self.propbox.pack_start(self.paddle_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.paddlesize_x_label, False, False)
-            self.propbox.pack_start(self.paddlesize_x_scale)
+            self.propbox.pack_start(self.paddlesize_x_scale, True, True, 0)
             self.propbox.pack_start(self.paddlesize_y_label, False, False)
-            self.propbox.pack_start(self.paddlesize_y_scale)
+            self.propbox.pack_start(self.paddlesize_y_scale, True, True, 0)
 
         if self.step == EditorPanel.STEP_AI:
             self.propbox.pack_start(self.ai_label, False, False)
             self.propbox.pack_start(self.separator, False, False)
             self.propbox.pack_start(self.aispeed_label, False, False)
-            self.propbox.pack_start(self.aispeed_scale)
+            self.propbox.pack_start(self.aispeed_scale, True, True, 0)
 
         self.propbox.show_all()
 
 # Panel that appears over the game, showing a list of scores.  Can be toggled on and off without pausing the game.
-class ScorePanel(gtk.VBox):
+class ScorePanel(Gtk.VBox):
     def __init__ (self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         # Header bar.
-        headerbox = gtk.VBox()
+        headerbox = Gtk.VBox()
         headerbox.set_spacing(20)
-        lbl = gtk.Label()
+        lbl = Gtk.Label()
         lbl.set_markup("<span size='x-large'><b>"+_('History of Games')+"</b></span>")
         headerbox.pack_start(lbl, False)
-        headerbox.pack_start(gtk.HSeparator(), False)
-        hbox = gtk.HBox()
+        headerbox.pack_start(Gtk.HSeparator(), False)
+        hbox = Gtk.HBox()
         hbox.set_homogeneous(True)
-        lbl = gtk.Label()
+        lbl = Gtk.Label()
         lbl.set_markup('<b>'+_('Player 1')+'</b>')
-        hbox.pack_start(lbl)
-        lbl = gtk.Label()
+        hbox.pack_start(lbl, True, True, 0)
+        lbl = Gtk.Label()
         lbl.set_markup('<b>'+_('Score')+'</b>')
-        hbox.pack_start(lbl)
-        lbl = gtk.Label()
+        hbox.pack_start(lbl, True, True, 0)
+        lbl = Gtk.Label()
         lbl.set_markup('<b>'+_('Player 2')+'</b>')
-        hbox.pack_end(lbl)
-        lbl = gtk.Label()
+        hbox.pack_end(lbl, True, True, 0)
+        lbl = Gtk.Label()
         lbl.set_markup('<b>'+_('Score')+'</b>')
-        hbox.pack_end(lbl)
+        hbox.pack_end(lbl, True, True, 0)
         headerbox.pack_start(hbox, False)
-        headerbox.pack_start(gtk.HSeparator(), False)
+        headerbox.pack_start(Gtk.HSeparator(), False)
 
         # Score box.
-        self.scorebox = gtk.VBox()
+        self.scorebox = Gtk.VBox()
         self.scorebox.set_spacing(10)
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         vbox.set_border_width(20)
         vbox.set_spacing(10)
         vbox.pack_start(headerbox, False)
         vbox.pack_start(self.scorebox, False)
-        vbox.pack_start(gtk.HSeparator(), False)
+        vbox.pack_start(Gtk.HSeparator(), False)
 
-        self.scroll = gtk.ScrolledWindow()
-        self.scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.scroll = Gtk.ScrolledWindow()
+        self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scroll.add_with_viewport(vbox)
 
-        frame = gtk.Frame()
-        frame.set_shadow_type(gtk.SHADOW_OUT)
+        frame = Gtk.Frame()
+        frame.set_shadow_type(Gtk.ShadowType.OUT)
         frame.add(self.scroll)
         self.add(frame)
 
@@ -1262,12 +1268,12 @@ class ScorePanel(gtk.VBox):
             w.destroy()
 
         for s in game.scores:
-            hbox = gtk.HBox()
+            hbox = Gtk.HBox()
             hbox.set_homogeneous(True)
-            hbox.pack_start(gtk.Label(s['Player1Name']))
-            hbox.pack_start(gtk.Label(s['Player1Score']))
-            hbox.pack_end(gtk.Label(s['Player2Name']))
-            hbox.pack_end(gtk.Label(s['Player2Score']))
+            hbox.pack_start(Gtk.Label(s['Player1Name'], True, True, 0))
+            hbox.pack_start(Gtk.Label(s['Player1Score'], True, True, 0))
+            hbox.pack_end(Gtk.Label(s['Player2Name'], True, True, 0))
+            hbox.pack_end(Gtk.Label(s['Player2Score'], True, True, 0))
             self.scorebox.pack_start(hbox, False)
 
 # This is a fake Presence Service Buddy object that represents computer players.
@@ -1331,24 +1337,24 @@ class BounceActivity(activity.Activity):
         self.show_interface()
         
         # Get the mainloop ready to run (this should come last).
-        gobject.timeout_add(50, self.mainloop)
+        GObject.timeout_add(50, self.mainloop)
 
     #-----------------------------------------------------------------------------------------------------------------
     # User interface building.
 
     def build_drawarea (self):
-        self.drawarea = gtk.Layout()
+        self.drawarea = Gtk.Layout()
         #self.drawarea.set_visible_window(True)
-        self.drawarea.set_size_request(gtk.gdk.screen_width(), gtk.gdk.screen_height())
+        self.drawarea.set_size_request(Gdk.Screen.width(), Gdk.Screen.height())
 
-        self.vbox = gtk.VBox()
+        self.vbox = Gtk.VBox()
         self.drawarea.put(self.vbox, 0, 0)
 
         self.drawarea.connect('destroy', self.on_destroy)
         #self.drawarea.connect('configure-event', self.on_drawarea_resize)
         self.drawarea.connect('expose-event', self.on_drawarea_expose)
 
-        self.drawarea.add_events(gtk.gdk.POINTER_MOTION_MASK|gtk.gdk.BUTTON_PRESS_MASK|gtk.gdk.BUTTON_RELEASE_MASK)
+        self.drawarea.add_events(Gdk.EventMask.POINTER_MOTION_MASK|Gdk.EventMask.BUTTON_PRESS_MASK|Gdk.EventMask.BUTTON_RELEASE_MASK)
         self.drawarea.connect('motion-notify-event', self.on_mouse)
         self.drawarea.connect('button-press-event', self.on_mouse)
         self.drawarea.connect('button-release-event', self.on_mouse)
@@ -1368,7 +1374,7 @@ class BounceActivity(activity.Activity):
         self.clearscoresbtn.set_tooltip(_("Reset History"))
         self.clearscoresbtn.connect('clicked', self.on_game_clearscores)
 
-        sep = gtk.SeparatorToolItem()
+        sep = Gtk.SeparatorToolItem()
         sep.set_expand(True)
         sep.set_draw(False)
 
@@ -1376,7 +1382,7 @@ class BounceActivity(activity.Activity):
         self.editbtn.set_tooltip(_("Edit"))
         self.editbtn.connect('clicked', self.on_edit)
 
-        self.gamebox = gtk.Toolbar()
+        self.gamebox = Gtk.Toolbar()
         self.gamebox.insert(self.pausebtn, -1)
         self.gamebox.insert(self.showscoresbtn, -1)
         self.gamebox.insert(self.clearscoresbtn, -1)
@@ -1404,7 +1410,7 @@ class BounceActivity(activity.Activity):
         self.addstagebtn.set_tooltip(_("Add New Stage"))
         self.addstagebtn.connect('clicked', self.on_edit_addstage)
 
-        sep = gtk.SeparatorToolItem()
+        sep = Gtk.SeparatorToolItem()
         sep.set_expand(True)
         sep.set_draw(False)
 
@@ -1412,12 +1418,12 @@ class BounceActivity(activity.Activity):
         self.gamebtn.set_tooltip(_("Play"))
         self.gamebtn.connect('clicked', self.on_game)
 
-        self.editbox = gtk.Toolbar()
+        self.editbox = Gtk.Toolbar()
         self.editbox.insert(self.testbtn, -1)
-        self.editbox.insert(gtk.SeparatorToolItem(), -1)
+        self.editbox.insert(Gtk.SeparatorToolItem(), -1)
         self.editbox.insert(self.prevstagebtn, -1)
         self.editbox.insert(self.nextstagebtn, -1)
-        self.editbox.insert(gtk.SeparatorToolItem(), -1)
+        self.editbox.insert(Gtk.SeparatorToolItem(), -1)
         self.editbox.insert(self.deletestagebtn, -1)
         self.editbox.insert(self.addstagebtn, -1)
         self.editbox.insert(sep, -1)
@@ -1438,7 +1444,7 @@ class BounceActivity(activity.Activity):
 
     def build_scorepanel (self):
         self.scorepanel = ScorePanel()
-        align = gtk.Alignment(0.0, 0.0, 1.0, 1.0)
+        align = Gtk.Alignment.new(0.0, 0.0, 1.0, 1.0)
         align.set_padding(50, 50, 100, 100)
         align.add(self.scorepanel)
         self.vbox.pack_start(align, True, True)
@@ -1476,7 +1482,7 @@ class BounceActivity(activity.Activity):
 
         def response(alert, response_id, self):
             self.remove_alert(alert)
-            if response_id is gtk.RESPONSE_OK:
+            if response_id is Gtk.ResponseType.OK:
                 game.scores = []
                 self.scorepanel.rebuild()
 
@@ -1547,7 +1553,7 @@ class BounceActivity(activity.Activity):
         set_3d_params(screen_width, screen_height, viewport_scale)
 
         # Rebuild drawimage.
-        self.drawimage = gtk.gdk.Image(gtk.gdk.IMAGE_FASTEST, gtk.gdk.visual_get_system(), rect[2], rect[3])
+        self.drawimage = Gdk.Image(Gdk.IMAGE_FASTEST, Gdk.visual_get_system(), rect[2], rect[3])
         game.drawimage = self.drawimage
 
         return True
@@ -1563,7 +1569,7 @@ class BounceActivity(activity.Activity):
         # Perform 3D rendering to the offscreen image and draw it to the screen.
         clear_image(self.drawimage)
         game.sequence.draw_3d()
-        gc = self.drawarea.get_style().fg_gc[gtk.STATE_NORMAL]
+        gc = self.drawarea.get_style().fg_gc[Gtk.StateType.NORMAL]
         self.drawarea.bin_window.draw_image(gc, self.drawimage, 0, 0, 0, 0, -1, -1)
 
         # Perform Cairo rendering over the top.
@@ -1618,7 +1624,7 @@ class BounceActivity(activity.Activity):
 
         def response(alert, response_id, self):
             self.remove_alert(alert)
-            if response_id is gtk.RESPONSE_OK:
+            if response_id is Gtk.ResponseType.OK:
                 self.set_mode(BounceActivity.MODE_EDIT)
 
         msg.connect('response', response, self)
@@ -1639,12 +1645,12 @@ class BounceActivity(activity.Activity):
     def on_mouse (self, widget, event):
         game.mousex = int(event.x)
         game.mousey = int(event.y)
-        if event.type == gtk.gdk.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_PRESS:
             # Simple cheat for testing.
             #if (game.paddle1.score < 5):
             #    game.paddle1.score += 1
             game.mousedown = 1
-        if event.type == gtk.gdk.BUTTON_RELEASE:
+        if event.type == Gdk.BUTTON_RELEASE:
             game.mousedown = 0
 
     #-----------------------------------------------------------------------------------------------------------------
@@ -1676,8 +1682,8 @@ class BounceActivity(activity.Activity):
         while self.running:
             clock.tick(self.limitfps)
             self.tick()
-            while gtk.events_pending():
-                gtk.main_iteration(False)
+            while Gtk.events_pending():
+                Gtk.main_iteration(False)
         return False
 
     #-----------------------------------------------------------------------------------------------------------------
