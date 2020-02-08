@@ -30,7 +30,9 @@ from pongc import *
 # Import GTK.
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
 from gi.repository import Gtk
+from gi.repository import Gdk
 import pygtk
 from gi.repository import Pango
 from gi.repository import GObject
@@ -43,9 +45,13 @@ pygame.mixer.init()
 
 # Import Sugar modules.
 from sugar3.activity import activity
-from sugar3.graphics import *
+from sugar3.graphics import toolbutton
 from sugar3.graphics import alert
 from sugar3.graphics import toggletoolbutton
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.toolbarbox import ToolbarBox
+# from sugar3.activity.widgets import ActivityToolbox
 from sugar3.graphics import icon
 from sugar3.presence import presenceservice
 
@@ -1042,8 +1048,8 @@ class EditorPanel(Gtk.EventBox):
         self.nextbtn.add(icon.Icon(icon_name='go-right'))
         self.nextbtn.connect('clicked', self.on_next)
 
-        self.hbox.pack_end(self.nextbtn, False, False)
-        self.hbox.pack_end(self.prevbtn, False, False)
+        self.hbox.pack_end(self.nextbtn, False, False,0)
+        self.hbox.pack_end(self.prevbtn, False, False,0)
 
         self.propbox = Gtk.HBox()
         self.propbox.set_spacing(20)
@@ -1060,9 +1066,14 @@ class EditorPanel(Gtk.EventBox):
         self.stagename_entry.connect('changed', self.on_entry_changed)
 
         self.stagedepth_label = Gtk.Label(label=_('Depth'))
-        self.stagedepth_adjust = Gtk.Adjustment(100, 10, 1000, 1)
+        self.stagedepth_adjust = Gtk.Adjustment(100, 10, 1000, 1)        
         self.stagedepth_adjust.connect('value-changed', self.on_value_changed)
-        self.stagedepth_scale = Gtk.HScale(self.stagedepth_adjust)
+        # self.stagedepth_scale = Gtk.HScale(self.stagedepth_adjust)
+        # edited
+        self.stagedepth_scale=Gtk.HScale()
+        self.stagedepth_scale.set_draw_value(False)
+        self.stagedepth_scale.set_adjustment(self.stagedepth_adjust)
+        # self.hbox.pack_start(s,False,False,0)
 
         self.stagegravity_x_label = Gtk.Label(label=_('X Gravity'))
         self.stagegravity_x_adjust = Gtk.Adjustment(0, -3, 3, 1)
@@ -1352,7 +1363,7 @@ class BounceActivity(activity.Activity):
 
         self.drawarea.connect('destroy', self.on_destroy)
         #self.drawarea.connect('configure-event', self.on_drawarea_resize)
-        self.drawarea.connect('expose-event', self.on_drawarea_expose)
+        self.drawarea.connect('draw', self.on_drawarea_expose)
 
         self.drawarea.add_events(Gdk.EventMask.POINTER_MOTION_MASK|Gdk.EventMask.BUTTON_PRESS_MASK|Gdk.EventMask.BUTTON_RELEASE_MASK)
         self.drawarea.connect('motion-notify-event', self.on_mouse)
@@ -1431,12 +1442,24 @@ class BounceActivity(activity.Activity):
 
     def build_toolbox (self):
         self.build_gamebox()
+        self.toolbar_box = ToolbarBox()
+        self.activity_button = ActivityToolbarButton(self)
+        self.toolbar_box.toolbar.insert(self.activity_button,0)
+        self.game_box = self.gamebox
+        self.game_box.show()
+        game_box_toolbar_button = ToolbarButton(page=self.game_box,icon_name='toolbar-view')
+        self.toolbar_box.toolbar.insert(game_box_toolbar_button,-1)
+        game_box_toolbar_button.show()
 
-        self.tbox = activity.ActivityToolbox(self)
-        self.tbox.add_toolbar(_("Game"), self.gamebox)
-        self.tbox.show_all()
+        # self.tbox = activity.ActivityToolbox(self)
+        # self.toolbar_box.add_toolbar(_("Game"), self.gamebox)
+        
+        # self.toolbar_box.insert(_("Game"),self.gamebox)
+        # # self.tbox.show_all()
 
-        self.set_toolbox(self.tbox)
+        # # self.set_toolbox(self.tbox)
+        self.set_toolbar_box(self.toolbar_box)
+        self.toolbar_box.show()
 
     def build_editor (self):
         self.editor = EditorPanel(self)
