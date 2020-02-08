@@ -1609,17 +1609,18 @@ class BounceActivity(activity.Activity):
         rect = self.drawarea.get_allocation()
         #log.debug("drawarea resized to %dx%d", rect[2], rect[3])
 
-        self.vbox.set_size_request(rect[2], rect[3])
+        self.vbox.set_size_request(rect.width, rect.height)
+        # self.vbox.set_size(rect[2], rect[3])
 
         # Set 3D parameters.
         global screen_width
         global screen_height
-        screen_width = rect[2]
-        screen_height = rect[3]
+        screen_width = rect.width
+        screen_height = rect.height
         set_3d_params(screen_width, screen_height, viewport_scale)
 
         # Rebuild drawimage.
-        self.drawimage = Gdk.Image(Gdk.IMAGE_FASTEST, Gdk.visual_get_system(), rect[2], rect[3])
+        self.drawimage = Gtk.Image(Gdk.IMAGE_FASTEST, Gdk.visual_get_system(), rect.width, rect.height)
         game.drawimage = self.drawimage
 
         return True
@@ -1718,7 +1719,7 @@ class BounceActivity(activity.Activity):
             #if (game.paddle1.score < 5):
             #    game.paddle1.score += 1
             game.mousedown = 1
-        if event.type == Gdk.BUTTON_RELEASE:
+        if event.type == Gdk.EventType.BUTTON_RELEASE:
             game.mousedown = 0
 
     #-----------------------------------------------------------------------------------------------------------------
