@@ -1067,54 +1067,93 @@ class EditorPanel(Gtk.EventBox):
 
         self.stagedepth_label = Gtk.Label(label=_('Depth'))
         self.stagedepth_adjust = Gtk.Adjustment(100, 10, 1000, 1)        
-        self.stagedepth_adjust.connect('value-changed', self.on_value_changed)
+        # self.stagedepth_adjust.connect('value-changed', self.on_value_changed)
         # self.stagedepth_scale = Gtk.HScale(self.stagedepth_adjust)
         # edited
         self.stagedepth_scale=Gtk.HScale()
         self.stagedepth_scale.set_draw_value(False)
         self.stagedepth_scale.set_adjustment(self.stagedepth_adjust)
+        self.stagedepth_adjust.connect('value-changed', self.on_value_changed)
         # self.hbox.pack_start(s,False,False,0)
-
+        # X
         self.stagegravity_x_label = Gtk.Label(label=_('X Gravity'))
         self.stagegravity_x_adjust = Gtk.Adjustment(0, -3, 3, 1)
+        # self.stagegravity_x_adjust.connect('value-changed', self.on_value_changed)
+        # self.stagegravity_x_scale = Gtk.HScale(self.stagegravity_x_adjust)
+        # edited
+        self.stagegravity_x_scale=Gtk.HScale()
+        self.stagegravity_x_scale.set_draw_value(False)
+        self.stagegravity_x_scale.set_adjustment(self.stagegravity_x_adjust)
         self.stagegravity_x_adjust.connect('value-changed', self.on_value_changed)
-        self.stagegravity_x_scale = Gtk.HScale(self.stagegravity_x_adjust)
+        # Y
         self.stagegravity_y_label = Gtk.Label(label=_('Y Gravity'))
         self.stagegravity_y_adjust = Gtk.Adjustment(1, -3, 3, 1)
+        # self.stagegravity_y_adjust.connect('value-changed', self.on_value_changed)
+        # self.stagegravity_y_scale = Gtk.HScale(self.stagegravity_y_adjust)
+        # edited
+        self.stagegravity_y_scale=Gtk.HScale()
+        self.stagegravity_y_scale.set_draw_value(False)
+        self.stagegravity_y_scale.set_adjustment(self.stagegravity_y_adjust)
         self.stagegravity_y_adjust.connect('value-changed', self.on_value_changed)
-        self.stagegravity_y_scale = Gtk.HScale(self.stagegravity_y_adjust)
-
+        
         self.ball_label = Gtk.Label()
         self.ball_label.set_markup('<big>'+_('Ball')+'</big>')
 
         self.ballsize_label = Gtk.Label(label=_('Size'))
         self.ballsize_adjust = Gtk.Adjustment(1, 1, 5, 1)
+        # self.ballsize_adjust.connect('value-changed', self.on_value_changed)
+        # self.ballsize_scale = Gtk.HScale(self.ballsize_adjust)
+        # edited
+        self.ballsize_scale=Gtk.HScale()
+        self.ballsize_scale.set_draw_value(False)
+        self.ballsize_scale.set_adjustment(self.ballsize_adjust)
         self.ballsize_adjust.connect('value-changed', self.on_value_changed)
-        self.ballsize_scale = Gtk.HScale(self.ballsize_adjust)
+        
         self.ballspeed_label = Gtk.Label(label=_('Speed'))
         self.ballspeed_adjust = Gtk.Adjustment(10, 1, 20, 1)
+        # self.ballspeed_adjust.connect('value-changed', self.on_value_changed)
+        # self.ballspeed_scale = Gtk.HScale(self.ballspeed_adjust)
+        # edited
+        self.ballspeed_scale=Gtk.HScale()
+        self.ballspeed_scale.set_draw_value(False)
+        self.ballspeed_scale.set_adjustment(self.ballspeed_adjust)
         self.ballspeed_adjust.connect('value-changed', self.on_value_changed)
-        self.ballspeed_scale = Gtk.HScale(self.ballspeed_adjust)
-
+        
         self.paddle_label = Gtk.Label()
         self.paddle_label.set_markup('<big>'+_('Paddle')+'</big>')
 
         self.paddlesize_x_label = Gtk.Label(label=_('X Size'))
         self.paddlesize_x_adjust = Gtk.Adjustment(20, 1, 50, 1)
         self.paddlesize_x_adjust.connect('value-changed', self.on_value_changed)
-        self.paddlesize_x_scale = Gtk.HScale(self.paddlesize_x_adjust)
+        # self.paddlesize_x_scale = Gtk.HScale(self.paddlesize_x_adjust)
+        # edited
+        self.paddlesize_x_scale = Gtk.HScale()
+        self.paddlesize_x_scale.set_draw_value(False)
+        self.paddlesize_x_scale.set_adjustment(self.paddlesize_x_adjust)
+        self.paddlesize_x_adjust.connect('value-changed', self.on_value_changed)
+
         self.paddlesize_y_label = Gtk.Label(label=_('Y Size'))
         self.paddlesize_y_adjust = Gtk.Adjustment(20, 1, 50, 1)
+        # self.paddlesize_y_adjust.connect('value-changed', self.on_value_changed)
+        # self.paddlesize_y_scale = Gtk.HScale(self.paddlesize_y_adjust)
+        # edited
+        self.paddlesize_y_scale=Gtk.HScale()
+        self.paddlesize_y_scale.set_draw_value(False)
+        self.paddlesize_y_scale.set_adjustment(self.paddlesize_y_adjust)
         self.paddlesize_y_adjust.connect('value-changed', self.on_value_changed)
-        self.paddlesize_y_scale = Gtk.HScale(self.paddlesize_y_adjust)
-
+        
         self.ai_label = Gtk.Label()
         self.ai_label.set_markup('<big>'+_('AI')+'</big>')
 
         self.aispeed_label = Gtk.Label(label=_('Speed'))
         self.aispeed_adjust = Gtk.Adjustment(1, 1, 10, 1)
+        # self.aispeed_adjust.connect('value-changed', self.on_value_changed)
+        # self.aispeed_scale = Gtk.HScale(self.aispeed_adjust)
+        #edited
+        self.aispeed_scale=Gtk.HScale()
+        self.aispeed_scale.set_draw_value(False)
+        self.aispeed_scale.set_adjustment(self.aispeed_adjust)
         self.aispeed_adjust.connect('value-changed', self.on_value_changed)
-        self.aispeed_scale = Gtk.HScale(self.aispeed_adjust)
 
         self.show_all()
 
@@ -1179,9 +1218,9 @@ class EditorPanel(Gtk.EventBox):
         self.update_step_btns()
 
         if self.step == EditorPanel.STEP_STAGENAME:
-            self.propbox.pack_start(self.stage_label, False, False)
-            self.propbox.pack_start(self.separator, False, False)
-            self.propbox.pack_start(self.stagename_label, False, False)
+            self.propbox.pack_start(self.stage_label, False, False,0)
+            self.propbox.pack_start(self.separator, False, False,0)
+            self.propbox.pack_start(self.stagename_label, False, False,0)
             self.propbox.pack_start(self.stagename_entry, True, True, 0)
 
         if self.step == EditorPanel.STEP_STAGEDEPTH:
@@ -1232,8 +1271,8 @@ class ScorePanel(Gtk.VBox):
         headerbox.set_spacing(20)
         lbl = Gtk.Label()
         lbl.set_markup("<span size='x-large'><b>"+_('History of Games')+"</b></span>")
-        headerbox.pack_start(lbl, False)
-        headerbox.pack_start(Gtk.HSeparator(), False)
+        headerbox.pack_start(lbl, False,False,0)
+        headerbox.pack_start(Gtk.HSeparator(), False,False,0)
         hbox = Gtk.HBox()
         hbox.set_homogeneous(True)
         lbl = Gtk.Label()
@@ -1248,8 +1287,8 @@ class ScorePanel(Gtk.VBox):
         lbl = Gtk.Label()
         lbl.set_markup('<b>'+_('Score')+'</b>')
         hbox.pack_end(lbl, True, True, 0)
-        headerbox.pack_start(hbox, False)
-        headerbox.pack_start(Gtk.HSeparator(), False)
+        headerbox.pack_start(hbox, False,False,0)
+        headerbox.pack_start(Gtk.HSeparator(), False,False,0)
 
         # Score box.
         self.scorebox = Gtk.VBox()
@@ -1258,9 +1297,9 @@ class ScorePanel(Gtk.VBox):
         vbox = Gtk.VBox()
         vbox.set_border_width(20)
         vbox.set_spacing(10)
-        vbox.pack_start(headerbox, False)
-        vbox.pack_start(self.scorebox, False)
-        vbox.pack_start(Gtk.HSeparator(), False)
+        vbox.pack_start(headerbox, False,False,0)
+        vbox.pack_start(self.scorebox, False,False,0)
+        vbox.pack_start(Gtk.HSeparator(), False,False,0)
 
         self.scroll = Gtk.ScrolledWindow()
         self.scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -1463,14 +1502,14 @@ class BounceActivity(activity.Activity):
 
     def build_editor (self):
         self.editor = EditorPanel(self)
-        self.vbox.pack_start(self.editor, False)
+        self.vbox.pack_start(self.editor, False,False,0)
 
     def build_scorepanel (self):
         self.scorepanel = ScorePanel()
         align = Gtk.Alignment.new(0.0, 0.0, 1.0, 1.0)
         align.set_padding(50, 50, 100, 100)
         align.add(self.scorepanel)
-        self.vbox.pack_start(align, True, True)
+        self.vbox.pack_start(align, True, True,0)
 
     def show_interface (self):
         self.show_all()
@@ -1478,12 +1517,16 @@ class BounceActivity(activity.Activity):
         if self.showscoresbtn.get_active():
             self.scorepanel.show_all()
         else:
-            self.scorepanel.hide_all()
+            # edited
+            self.scorepanel.hide()
+            # self.scorepanel.hide_all()
 
         if self.mode == BounceActivity.MODE_EDIT:
             self.editor.show_all()
         else:
-            self.editor.hide_all()
+            #edited
+            self.editor.hide()
+            # self.editor.hide_all()
         
     #-----------------------------------------------------------------------------------------------------------------
     # Game toolbar
