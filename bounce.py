@@ -1620,7 +1620,7 @@ class BounceActivity(activity.Activity):
         set_3d_params(screen_width, screen_height, viewport_scale)
 
         # Rebuild drawimage.
-        self.drawimage = Gtk.Image(Gdk.IMAGE_FASTEST, Gdk.visual_get_system(), rect.width, rect.height)
+        self.drawimage = Gdk.Image(Gdk.IMAGE_FASTEST, Gdk.visual_get_system(), rect.width, rect.height)
         game.drawimage = self.drawimage
 
         return True
