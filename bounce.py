@@ -1751,7 +1751,7 @@ class BounceActivity(activity.Activity):
             clock.tick(self.limitfps)
             self.tick()
             while Gtk.events_pending():
-                Gtk.main_iteration(False)
+                Gtk.main_iteration()
         return False
 
     #-----------------------------------------------------------------------------------------------------------------
