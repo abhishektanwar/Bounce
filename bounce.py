@@ -1625,7 +1625,7 @@ class BounceActivity(activity.Activity):
         return True
 
     def on_drawarea_expose (self, widget, event):
-        if not self.drawarea.bin_window:
+        if not self.drawarea.get_bin_window:
             return True
 
         rect = self.drawarea.get_allocation()
@@ -1653,11 +1653,13 @@ class BounceActivity(activity.Activity):
         self.mode = mode
 
         if self.mode == BounceActivity.MODE_GAME:
-            self.tbox.remove_toolbar(1)
+            self.toolbar_box.remove(self.gamebox)
             self.build_gamebox()
-            self.tbox.add_toolbar(_("Game"), self.gamebox)
+            # edited
+            # self.tbox.add_toolbar(_("Game"), self.gamebox)
+            self.toolbar_box.toolbar.insert(ToolbarButton(page=self.game_box,icon_name='toolbar-view'),-1)
             self.gamebox.show_all()
-            self.tbox.set_current_toolbar(1)
+            self.toolbar_box.set_current_toolbar(1)
 
             self.pause_game(False)
 
@@ -1670,7 +1672,7 @@ class BounceActivity(activity.Activity):
             game.scores = []
             self.scorepanel.rebuild()
 
-            self.tbox.remove_toolbar(1)
+            self.toolbar_box.remove(self.gamebox)
             self.build_editbox()
             self.tbox.add_toolbar(_("Edit"), self.editbox)
             self.editbox.show_all()
