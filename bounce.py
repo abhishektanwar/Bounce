@@ -1636,7 +1636,7 @@ class BounceActivity(activity.Activity):
         # Perform 3D rendering to the offscreen image and draw it to the screen.
         clear_image(self.drawimage)
         game.sequence.draw_3d()
-        gc = self.drawarea.get_style().fg_gc[Gtk.StateType.NORMAL]
+        gc = self.drawarea.get_style().fg_gc[Gtk.STATE_NORMAL]
         self.drawarea.bin_window.draw_image(gc, self.drawimage, 0, 0, 0, 0, -1, -1)
 
         # Perform Cairo rendering over the top.
